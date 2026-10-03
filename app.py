@@ -40,19 +40,42 @@ except:
     st.stop()
 
 # Instrucciones de comportamiento (Neuroprompting)
-INSTRUCCIONES_SISTEMA = """
+# Función para leer automáticamente todos los archivos Word del repositorio
+def cargar_base_conocimiento():
+    texto_base = ""
+    for archivo in os.listdir():
+        if archivo.endswith(".docx"):
+            try:
+                doc = docx.Document(archivo)
+                texto_base += f"\n\n--- DOCUMENTO: {archivo} ---\n"
+                for parrafo in doc.paragraphs:
+                    if parrafo.text.strip() != "":
+                        texto_base += parrafo.text + "\n"
+            except Exception as e:
+                pass # Si un archivo tiene un formato extraño, lo saltea y sigue con los demás
+    return texto_base
+
+# Extraemos el texto de tus documentos
+BASE_DE_DATOS_CURSO = cargar_base_conocimiento()
+
+# Instrucciones de comportamiento (Neuroprompting)
+INSTRUCCIONES_SISTEMA = f"""
 Eres un tutor universitario experto en el Curso de Inteligencia Artificial Aplicado a la Gestión Universitaria.
-Tu objetivo es ayudar a los alumnos a comprender el neuroprompting.
+Tu objetivo es ayudar a los alumnos a comprender la materia.
+
 Reglas de comportamiento:
 1. NUNCA digas "Soy un modelo de lenguaje" ni hables como un robot.
 2. Sé cálido, empático y usa un tono de profesor universitario accesible.
 3. Usa el método socrático: si el alumno se equivoca, no le des la respuesta directa, hazle una pregunta que lo guíe.
 4. Mantén tus respuestas concisas y claras.
 5. Invita siempre a la reflexión al final de tu mensaje.
+6. MUY IMPORTANTE: Debes basar TODAS tus respuestas estrictamente en la "BASE DE CONOCIMIENTOS OFICIAL" que se proporciona a continuación. Si el alumno pregunta algo fuera de estos documentos, indícale amablemente que deben enfocarse en los contenidos teóricos del curso.
+
+BASE DE CONOCIMIENTOS OFICIAL:
+{BASE_DE_DATOS_CURSO}
 """
 
-# Inicializar el modelo
-modelo = genai.GenerativeModel("gemini-flash-latest", system_instruction=INSTRUCCIONES_SISTEMA)
+# Inicializar el modelo con el marco teórico inyectado
 
 # Memoria de la conversación
 if "mensajes" not in st.session_state:
