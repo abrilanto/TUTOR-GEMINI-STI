@@ -38,9 +38,6 @@ try:
 except:
     st.warning("Falta configurar la API Key en Streamlit. Lo haremos en el próximo paso.")
     st.stop()
-for m in genai.list_models():
-    if "generateContent" in m.supported_generation_methods:
-        st.write(m.name)
 
 # Instrucciones de comportamiento (Neuroprompting)
 INSTRUCCIONES_SISTEMA = """
@@ -55,7 +52,7 @@ Reglas de comportamiento:
 """
 
 # Inicializar el modelo
-modelo = genai.GenerativeModel('gemini-1.5-flash', system_instruction=INSTRUCCIONES_SISTEMA)
+modelo = genai.GenerativeModel("gemini-1.5-flash", system_instruction=INSTRUCCIONES_SISTEMA)
 
 # Memoria de la conversación
 if "mensajes" not in st.session_state:
