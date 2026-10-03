@@ -51,7 +51,7 @@ Reglas de comportamiento:
 """
 
 # Inicializar el modelo
-modelo = genai.GenerativeModel('models/gemini-1.5-flash', system_instruction=INSTRUCCIONES_SISTEMA)
+modelo = genai.GenerativeModel('gemini-1.5-pro', system_instruction=INSTRUCCIONES_SISTEMA)
 
 # Memoria de la conversación
 if "mensajes" not in st.session_state:
