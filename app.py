@@ -26,6 +26,7 @@ if not st.session_state.acceso_concedido:
         else:
             st.error("Contraseña incorrecta. Intenta nuevamente.")
     st.stop()
+    
 
 # 3. CONFIGURACIÓN DE LA IA Y MEMORIA
 st.image("images.png", width=150)
@@ -37,6 +38,9 @@ try:
 except:
     st.warning("Falta configurar la API Key en Streamlit. Lo haremos en el próximo paso.")
     st.stop()
+for m in genai.list_models():
+    if "generateContent" in m.supported_generation_methods:
+        st.write(m.name)
 
 # Instrucciones de comportamiento (Neuroprompting)
 INSTRUCCIONES_SISTEMA = """
